@@ -1,7 +1,7 @@
 package serie2.problema
 
 fun main() {
-    val startTime = System.currentTimeMillis() // Começa a contar o tempo
+    val totalStart = System.currentTimeMillis() // Tempo total começa
 
     println("Escolhe a implementação:")
     println("1 - Usar HashMap da Kotlin")
@@ -35,50 +35,28 @@ fun main() {
 
     println("A carregar ficheiros $file1 e $file2...")
     engine.load(file1, file2)
-    println("Ficheiros carregados.")
+    println("Ficheiros carregados com sucesso.")
 
-    println("Aplicação pronta. Comandos disponíveis:")
-    println("union <ficheiro>")
-    println("intersection <ficheiro>")
-    println("difference <ficheiro>")
-    println("exit")
+    println("A executar operações...")
 
-    while (true) {
-        print("> ")
-        val input = readlnOrNull()?.trim() ?: break
-        val parts = input.split(" ")
+    // Union
+    val startUnion = System.currentTimeMillis()
+    engine.union("union.out")
+    val endUnion = System.currentTimeMillis()
+    println("union.out criado em ${endUnion - startUnion} ms")
 
-        when (parts[0]) {
-            "union" -> {
-                if (parts.size == 2) {
-                    engine.union(parts[1])
-                    println("Ficheiro ${parts[1]} criado.")
-                } else println("Uso: union <ficheiro>")
-            }
+    // Intersection
+    val startIntersection = System.currentTimeMillis()
+    engine.intersection("intersection.out")
+    val endIntersection = System.currentTimeMillis()
+    println("intersection.out criado em ${endIntersection - startIntersection} ms")
 
-            "intersection" -> {
-                if (parts.size == 2) {
-                    engine.intersection(parts[1])
-                    println("Ficheiro ${parts[1]} criado.")
-                } else println("Uso: intersection <ficheiro>")
-            }
+    // Difference
+    val startDifference = System.currentTimeMillis()
+    engine.difference("difference.out")
+    val endDifference = System.currentTimeMillis()
+    println("difference.out criado em ${endDifference - startDifference} ms")
 
-            "difference" -> {
-                if (parts.size == 2) {
-                    engine.difference(parts[1])
-                    println("Ficheiro ${parts[1]} criado.")
-                } else println("Uso: difference <ficheiro>")
-            }
-
-            "exit" -> {
-                val endTime = System.currentTimeMillis()
-                val elapsed = endTime - startTime
-                println("A sair...")
-                println("Tempo total de execução: ${elapsed} ms")
-                return
-            }
-
-            else -> println("Comando não reconhecido.")
-        }
-    }
+    val totalEnd = System.currentTimeMillis()
+    println("Tempo total de execução: ${totalEnd - totalStart} ms")
 }

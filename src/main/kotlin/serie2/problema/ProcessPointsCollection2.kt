@@ -36,8 +36,8 @@ object ProcessPointsCollection2:PointsCollectionEngine {
                         val point = Point(x,y)
                         val new =
                             when(pointSource){
-                                Source.FILE1 -> Source.BOTH
-                                else -> Source.FILE2
+                                Source.FILE2 -> Source.BOTH
+                                else -> Source.FILE1
                             }
                         HashMap.put(point, new)
                     }
@@ -57,8 +57,8 @@ object ProcessPointsCollection2:PointsCollectionEngine {
                         val point = Point(x,y)
                         val new =
                             when(pointSource){
-                                Source.FILE2 -> Source.BOTH
-                                else -> Source.FILE1
+                                Source.FILE1 -> Source.BOTH
+                                else -> Source.FILE2
                             }
                         HashMap.put(point, new)
                     }

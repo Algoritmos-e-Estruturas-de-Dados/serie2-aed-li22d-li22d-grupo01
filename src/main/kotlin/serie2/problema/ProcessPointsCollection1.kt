@@ -36,8 +36,8 @@ object ProcessPointsCollection1: PointsCollectionEngine {
 
                          HashMap[point] =
                              when(HashMap[point]){
-                                 Source.FILE1 -> Source.BOTH
-                                 else -> Source.FILE2
+                                 Source.FILE2 -> Source.BOTH
+                                 else -> Source.FILE1
                              }
                      }
                  }
@@ -56,8 +56,8 @@ object ProcessPointsCollection1: PointsCollectionEngine {
 
                          HashMap[point] =
                              when(HashMap[point]){
-                                 Source.FILE2 -> Source.BOTH
-                                 else -> Source.FILE1
+                                 Source.FILE1 -> Source.BOTH
+                                 else -> Source.FILE2
                              }
                      }
                  }
