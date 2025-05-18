@@ -31,5 +31,69 @@ fun splitEvensAndOdds(list:Node<Int>){
 }
 
 fun <T> intersection(list1: Node<T>, list2: Node<T>, cmp: Comparator<T>): Node<T>? {
-    TODO()
+    var curr1 = list1.next
+    var curr2 = list2.next
+
+    val sentinela1 = list1
+    val sentinela2 = list2
+
+    var resultHead: Node<T>? = null
+    var resultTail: Node<T>? = null
+    var lastInserted: T? = null
+
+    while (curr1 != sentinela1 && curr2 != sentinela2) {
+        val comparison = cmp.compare(curr1!!.value, curr2!!.value)
+
+        when {
+            comparison == 0 -> {
+                if (lastInserted == null || cmp.compare(curr1.value, lastInserted) != 0) {
+                    val toAdd = curr1
+                    val next1 = curr1.next
+                    val next2 = curr2.next
+
+                    removeNodes(curr1)
+                    removeNodes(curr2)
+
+                    toAdd.next = null
+                    toAdd.previous = null
+
+                    if (resultHead == null) {
+                        resultTail = toAdd
+                        resultHead = resultTail
+                    } else {
+                        resultTail!!.next = toAdd
+                        toAdd.previous = resultTail
+                        resultTail = toAdd
+                    }
+
+                    lastInserted = toAdd.value
+                    curr1 = next1
+                    curr2 = next2
+                } else {
+                    val next1 = curr1.next
+                    val next2 = curr2.next
+
+                    removeNodes(curr1)
+                    removeNodes(curr2)
+
+                    curr1 = next1
+                    curr2 = next2
+                }
+            }
+
+            comparison < 0 -> curr1 = curr1.next
+            else -> curr2 = curr2.next
+        }
+    }
+
+    return resultHead
+}
+
+fun <T> removeNodes(node: Node<T>){
+
+    node.previous!!.next = node.next
+    node.next!!.previous = node.previous
+    node.next = null
+    node.previous = null
+
 }
