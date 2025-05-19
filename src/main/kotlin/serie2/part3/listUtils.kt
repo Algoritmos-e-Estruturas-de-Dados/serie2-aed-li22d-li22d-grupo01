@@ -91,9 +91,6 @@ fun <T> intersection(list1: Node<T>, list2: Node<T>, cmp: Comparator<T>): Node<T
 
 fun <T> removeNodes(node: Node<T>){
 
-    node.previous!!.next = node.next
-    node.next!!.previous = node.previous
-    node.next = null
-    node.previous = null
-
+    node?.previous?.next = node?.next
+    node?.next?.previous = node?.previous
 }
