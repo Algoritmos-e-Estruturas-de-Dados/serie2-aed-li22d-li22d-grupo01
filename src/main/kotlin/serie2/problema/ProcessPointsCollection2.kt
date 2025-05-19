@@ -11,31 +11,31 @@ object ProcessPointsCollection2:PointsCollectionEngine {
         val readfile1 = reader(file1)
         val readfile2 = reader(file2)
 
-        var line1:String? = readfile1.readLine()
-        var line2:String? = readfile2.readLine()
+        var line1: String? = readfile1.readLine()
+        var line2: String? = readfile2.readLine()
 
         while ((line1 != null && !line1.startsWith("v"))) {
             line1 = readfile1.readLine()
         }
 
-        while((line2 != null && !line2.startsWith("v"))){
+        while ((line2 != null && !line2.startsWith("v"))) {
             line2 = readfile2.readLine()
         }
 
 
-        while (line1 != null || line2 != null){
+        while (line1 != null || line2 != null) {
 
-            if (line1 != null && line1.startsWith("v")){
+            if (line1 != null && line1.startsWith("v")) {
 
                 val split = line1.split(' ')
                 if (split.size == 4 && split[0] == "v") {
                     val x = split[2].toDoubleOrNull()
                     val y = split[3].toDoubleOrNull()
-                    if (x != null && y != null){
-                        val pointSource = HashMap[Point(x,y)]
-                        val point = Point(x,y)
+                    if (x != null && y != null) {
+                        val pointSource = HashMap[Point(x, y)]
+                        val point = Point(x, y)
                         val new =
-                            when(pointSource){
+                            when (pointSource) {
                                 Source.FILE2 -> Source.BOTH
                                 else -> Source.FILE1
                             }
@@ -46,17 +46,17 @@ object ProcessPointsCollection2:PointsCollectionEngine {
             }
 
 
-            if (line2 != null && line2.startsWith("v")){
+            if (line2 != null && line2.startsWith("v")) {
 
                 val split = line2.split(' ')
                 if (split.size == 4 && split[0] == "v") {
                     val x = split[2].toDoubleOrNull()
                     val y = split[3].toDoubleOrNull()
-                    if (x != null && y != null){
-                        val pointSource = HashMap[Point(x,y)]
-                        val point = Point(x,y)
+                    if (x != null && y != null) {
+                        val pointSource = HashMap[Point(x, y)]
+                        val point = Point(x, y)
                         val new =
-                            when(pointSource){
+                            when (pointSource) {
                                 Source.FILE1 -> Source.BOTH
                                 else -> Source.FILE2
                             }
@@ -75,7 +75,7 @@ object ProcessPointsCollection2:PointsCollectionEngine {
 
         val union = writer(output)
 
-        for (point in HashMap){
+        for (point in HashMap) {
 
             union.println("${point.key.x}, ${point.key.y}")
         }
@@ -86,8 +86,8 @@ object ProcessPointsCollection2:PointsCollectionEngine {
 
         val intersection = writer(output)
 
-        for (point in HashMap){
-            if (point.value == Source.BOTH){
+        for (point in HashMap) {
+            if (point.value == Source.BOTH) {
                 intersection.println("${point.key.x}, ${point.key.y}")
 
             }
@@ -96,14 +96,18 @@ object ProcessPointsCollection2:PointsCollectionEngine {
     }
 
     override fun difference(output: String) {
-
         val difference = writer(output)
 
-        for (point in HashMap){
-            if ((point.value == Source.FILE1 && !(point.value == Source.FILE2)) || (!(point.value == Source.FILE1) && (point.value == Source.FILE2))){
-                difference.println("${point.key.x}, ${point.key.y}")
+        for (entry in HashMap) {
+            if (entry.value == Source.FILE1) {
+                difference.println("${entry.key.x}, ${entry.key.y}")
             }
         }
+
         difference.close()
     }
+
 }
+
+
+

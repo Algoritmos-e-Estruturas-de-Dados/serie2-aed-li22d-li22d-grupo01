@@ -14,7 +14,6 @@ fun writer(fileName: String): PrintWriter {
     return PrintWriter(fileName)
 }
 
-
 enum class Source {FILE1, FILE2, BOTH}
 
 interface PointsCollectionEngine {

@@ -93,14 +93,14 @@ object ProcessPointsCollection1: PointsCollectionEngine {
      }
 
     override fun difference(output: String) {
-        val differenceWriter = writer(output)
+        val difference = writer(output)
 
         for ((point, source) in HashMap) {
             if (source == Source.FILE1) {
-                differenceWriter.println("${point.x}, ${point.y}")
+                difference.println("${point.x}, ${point.y}")
             }
         }
-        differenceWriter.close()
+        difference.close()
     }
 
 }
