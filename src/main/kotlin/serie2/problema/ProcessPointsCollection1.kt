@@ -92,15 +92,15 @@ object ProcessPointsCollection1: PointsCollectionEngine {
          intersection.close()
      }
 
-     override fun difference(output: String) {
+    override fun difference(output: String) {
+        val differenceWriter = writer(output)
 
-         val difference = writer(output)
+        for ((point, source) in HashMap) {
+            if (source == Source.FILE1) {
+                differenceWriter.println("${point.x}, ${point.y}")
+            }
+        }
+        differenceWriter.close()
+    }
 
-         for (point in HashMap){
-             if ((point.value == Source.FILE1 && !(point.value == Source.FILE2)) || (!(point.value == Source.FILE1) && (point.value == Source.FILE2))){
-                difference.println("${point.key.x}, ${point.key.y}")
-             }
-         }
-        difference.close()
-     }
 }
