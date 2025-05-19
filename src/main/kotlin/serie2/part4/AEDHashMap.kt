@@ -1,9 +1,10 @@
 package serie2.part4
 
 class AEDHashMap<K, V> (initialCapacity: Int = 16, val loadFactor: Float = 0.75f): AEDMutableMap<K, V> {
-    class HashNode<K, V>(override val key: K, override var value: V,
-                         var next: HashNode<K, V>? = null
-    ): AEDMutableMap.MutableEntry<K,V> {
+    class HashNode<K, V>(
+        override val key: K, override var value: V,
+        var next: HashNode<K, V>? = null
+    ) : AEDMutableMap.MutableEntry<K, V> {
         var hc = key.hashCode()
         override fun setValue(newValue: V): V {
             val oldValue = value
@@ -12,23 +13,23 @@ class AEDHashMap<K, V> (initialCapacity: Int = 16, val loadFactor: Float = 0.75f
         }
 
     }
-    override var size: Int=0
-    override var capacity: Int=initialCapacity
+
+    override var size: Int = 0
+    override var capacity: Int = initialCapacity
     private var table: Array<HashNode<K, V>?> = arrayOfNulls(initialCapacity)
 
-    inner class MapIterator:Iterator<AEDMutableMap.MutableEntry<K, V>>{
+    inner class MapIterator : Iterator<AEDMutableMap.MutableEntry<K, V>> {
         var pos = 0
-        var currNode:HashNode<K, V>? = null
-        var currNodeIter:HashNode<K, V>?=null
+        var currNode: HashNode<K, V>? = null
+        var currNodeIter: HashNode<K, V>? = null
         override fun hasNext(): Boolean {
-            if(currNode!=null) return true;
-            while(pos < table.size){
-                if(currNodeIter==null){
-                    currNodeIter= table[pos++]
-                }
-                else{
-                    currNode=currNodeIter
-                    currNodeIter=currNodeIter?.next
+            if (currNode != null) return true;
+            while (pos < table.size) {
+                if (currNodeIter == null) {
+                    currNodeIter = table[pos++]
+                } else {
+                    currNode = currNodeIter
+                    currNodeIter = currNodeIter?.next
                     return true
                 }
             }
@@ -36,7 +37,7 @@ class AEDHashMap<K, V> (initialCapacity: Int = 16, val loadFactor: Float = 0.75f
         }
 
         override fun next(): AEDMutableMap.MutableEntry<K, V> {
-            if(!hasNext()) throw NoSuchElementException()
+            if (!hasNext()) throw NoSuchElementException()
             val toReturn = currNode
             currNode = null
             return toReturn!!
@@ -47,52 +48,62 @@ class AEDHashMap<K, V> (initialCapacity: Int = 16, val loadFactor: Float = 0.75f
         return MapIterator()
     }
 
-    private fun hash( HashCode: Int ): Int {
-        return HashCode.and( 0x7fffffff ) % table.size
+    private fun hash(HashCode: Int): Int {
+        return HashCode.and(0x7fffffff) % table.size
     }
 
     override fun get(key: K): V? {
-        val idx = key.hashCode() % table.size
+        val idx = hash(key.hashCode())
         var currNode = table[idx]
-        while(currNode != null){
-            if(currNode.key == key){
+        while (currNode != null) {
+            if (currNode.key == key) {
                 return currNode.value
             }
-            currNode=currNode.next
+            currNode = currNode.next
         }
         return null
     }
 
     private fun expand() {
-        val currTable = table
-        table = arrayOfNulls(capacity * 2)
-        capacity*=2
-        for (node in currTable){
+        val oldTable = table
+        capacity *= 2
+        table = arrayOfNulls(capacity)
+
+        for (node in oldTable) {
             var currNode = node
-            while (currNode != null){
+            while (currNode != null) {
+                val nextNode = currNode.next
                 val idx = hash(currNode.hc)
-                //if (idx<0) idx+capacity else idx
                 currNode.next = table[idx]
                 table[idx] = currNode
-                currNode = currNode.next
+                currNode = nextNode
             }
         }
     }
 
-    override fun put(key: K, value: V): V?{
-        var idx = hash(key.hashCode()) //key.hashCode() % table.size
-        var currNode = table[idx]
-        while (currNode != null){
-            if(currNode.key == key){
-                return currNode.setValue(value)
+
+    override fun put(key: K, value: V): V? {
+        val index = (key.hashCode() and 0x7fffffff) % capacity
+        var node = table[index]
+
+        while (node != null) {
+            if (node.key == key) {
+                val oldValue = node.value
+                node.value = value
+                return oldValue
             }
-            currNode = currNode.next
+            node = node.next
         }
-        if(++size >= loadFactor * table.size){
+
+        val newNode = HashNode(key, value)
+        newNode.next = table[index]
+        table[index] = newNode
+        size++
+
+        if (size >= (capacity * loadFactor).toInt()) {
             expand()
-            idx = hash(key.hashCode())
         }
-        table[idx] = HashNode(key, value, table[idx])
+
         return null
     }
 }
